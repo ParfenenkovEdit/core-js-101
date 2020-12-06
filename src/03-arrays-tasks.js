@@ -544,7 +544,7 @@ function distinct(arr) {
  *   }
  */
 function group(array, keySelector, valueSelector) {
-  const keys = Array.from(new Set(array.map(keySelector)));
+  const keys = array.map(keySelector);
   const values = array.map(valueSelector);
   const obj = {};
   array.map((item, index) => {

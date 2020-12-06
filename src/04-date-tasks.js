@@ -19,8 +19,8 @@
  *    'Tue, 26 Jan 2016 13:48:02 GMT' => Date()
  *    'Sun, 17 May 1998 03:00:00 GMT+01' => Date()
  */
-function parseDataFromRfc2822(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromRfc2822(value) {
+  return new Date(value);
 }
 
 /**
@@ -34,8 +34,8 @@ function parseDataFromRfc2822(/* value */) {
  *    '2016-01-19T16:07:37+00:00'    => Date()
  *    '2016-01-19T08:07:37Z' => Date()
  */
-function parseDataFromIso8601(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromIso8601(value) {
+  return new Date(value);
 }
 
 
@@ -48,13 +48,21 @@ function parseDataFromIso8601(/* value */) {
  *
  * @example :
  *    Date(1900,1,1)    => false
- *    Date(2000,1,1)    => true
+ *    Date(2000,1,1)    => true й
  *    Date(2001,1,1)    => false
  *    Date(2012,1,1)    => true
  *    Date(2015,1,1)    => false
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  const year = date.getFullYear();
+  if (year % 4 !== 0) {
+    return false;
+  } if (year % 100 !== 0) {
+    return true;
+  } if (year % 400 === 0) {
+    return true;
+  }
+  return false;
 }
 
 
@@ -73,11 +81,27 @@ function isLeapYear(/* date */) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,10,0,0,250)     => "00:00:00.250"
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
-function timeSpanToString(/* startDate, endDate */) {
-  throw new Error('Not implemented');
+function timeSpanToString(startDate, endDate) {
+  const formatTime = (time) => (time < 10 ? `0${time}` : time);
+  const formatMS = (ms) => {
+    let result = ms;
+    if (ms < 100) {
+      if (ms < 10) {
+        result = `00${ms}`;
+      } else {
+        result = `0${ms}`;
+      }
+    }
+    return result;
+  };
+
+  const def = endDate - startDate;
+  const hours = Math.floor(def / (3600 * 1000));
+  const minutes = Math.floor((def - (hours * 3600 * 1000)) / (60 * 1000));
+  const seconds = Math.floor((def - (hours * 3600 * 1000) - (minutes * 60 * 1000)) / 1000);
+  const ms = def - (hours * 3600 * 1000) - (minutes * 60 * 1000) - (seconds * 1000);
+  return `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}.${formatMS(ms)}`;
 }
-
-
 /**
  * Returns the angle (in radians) between the hands of an analog clock
  * for the specified Greenwich time.
@@ -94,10 +118,13 @@ function timeSpanToString(/* startDate, endDate */) {
  *    Date.UTC(2016,3,5,18, 0) => Math.PI
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
-function angleBetweenClockHands(/* date */) {
-  throw new Error('Not implemented');
+function angleBetweenClockHands(date) {
+  const curDate = new Date(date);
+  const hours = curDate.getUTCHours() % 12;
+  const minutes = curDate.getUTCMinutes();
+  const result = (Math.abs((60 * hours - 11 * minutes)) / 2) * (Math.PI / 180);
+  return result > Math.PI ? result - Math.PI : result;
 }
-
 
 module.exports = {
   parseDataFromRfc2822,
