@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 /* *************************************************************************************************
  *                                                                                                *
  * Plese read the following tutorial before implementing tasks:                                   *
@@ -190,14 +189,15 @@ function findFirstSingleChar(str) {
       chars[str[i]] = 1;
     }
   }
-  let result = null;
-  for (const [key, value] of Object.entries(chars)) {
-    if (value === 1) {
-      result = key;
-      break;
+  const incorrectResult = null;
+
+  const resultObj = Object.entries(chars);
+  for (let i = 0; i < resultObj.length; i += 1) {
+    if (resultObj[i][1] === 1) {
+      return resultObj[i][0];
     }
   }
-  return result;
+  return incorrectResult;
 }
 
 
@@ -223,8 +223,11 @@ function findFirstSingleChar(str) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  const first = a < b ? a : b;
+  const second = a < b ? b : a;
+
+  return `${isStartIncluded === true ? '[' : '('}${first}, ${second}${isEndIncluded === true ? ']' : ')'}`;
 }
 
 
