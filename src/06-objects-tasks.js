@@ -20,8 +20,10 @@
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  this.width = width;
+  this.height = height;
+  this.getArea = () => this.width * this.height;
 }
 
 
@@ -35,8 +37,8 @@ function Rectangle(/* width, height */) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
 
 
@@ -51,8 +53,8 @@ function getJSON(/* obj */) {
  *    const r = fromJSON(Circle.prototype, '{"radius":10}');
  *
  */
-function fromJSON(/* proto, json */) {
-  throw new Error('Not implemented');
+function fromJSON(proto, json) {
+  return Object.assign(Object.create(proto), JSON.parse(json));
 }
 
 
@@ -92,19 +94,19 @@ function fromJSON(/* proto, json */) {
  *  builder.element('a').attr('href$=".png"').pseudoClass('focus').stringify()
  *    => 'a[href$=".png"]:focus'
  *
- *  builder.combine(
- *      builder.element('div').id('main').class('container').class('draggable'),
- *      '+',
- *      builder.combine(
- *          builder.element('table').id('data'),
- *          '~',
- *           builder.combine(
- *               builder.element('tr').pseudoClass('nth-of-type(even)'),
- *               ' ',
- *               builder.element('td').pseudoClass('nth-of-type(even)')
- *           )
- *      )
- *  ).stringify()
+  *  builder.combine(
+  *      builder.element('div').id('main').class('container').class('draggable'),
+  *      '+',
+  *      builder.combine(
+  *          builder.element('table').id('data'),
+  *          '~',
+  *           builder.combine(
+  *               builder.element('tr').pseudoClass('nth-of-type(even)'),
+  *               ' ',
+  *               builder.element('td').pseudoClass('nth-of-type(even)')
+  *           )
+  *      )
+  *  ).stringify()
  *    => 'div#main.container.draggable + table#data ~ tr:nth-of-type(even)   td:nth-of-type(even)'
  *
  *  For more examples see unit tests.
@@ -140,6 +142,82 @@ const cssSelectorBuilder = {
   },
 };
 
+// class CssSelector {
+//   constructor() {
+//     this.selectors = '';
+//   }
+
+
+//   element(value) {
+//     this.selectors = `${this.selectors}${value}`;
+//     return this;
+//   }
+
+//   id(value) {
+//     this.selectors = `${this.selectors}#${value}`;
+//     return this;
+//   }
+
+//   class(value) {
+//     this.selectors = `${this.selectors}.${value}`;
+//     return this;
+//   }
+
+//   attr(value) {
+//     this.selectors = `${this.selectors}[${value}]`;
+//     return this;
+//   }
+
+//   pseudoClass(value) {
+//     this.selectors = `${this.selectors}:${value}`;
+//     return this;
+//   }
+
+//   pseudoElement(value) {
+//     this.selectors = `${this.selectors}::${value}`;
+//     return this;
+//   }
+
+//   combine(selector1, combinator, selector2) {
+//     this.selectors = `${selector1.stringify()} ${combinator} ${selector2.stringify()}`;
+//     return this;
+//   }
+
+//   stringify() {
+//     return this.selectors;
+//   }
+// }
+
+
+// const cssSelectorBuilder = {
+//   element(value) {
+//     return new CssSelector().element(value);
+//   },
+
+//   id(value) {
+//     return new CssSelector().id(value);
+//   },
+
+//   class(value) {
+//     return new CssSelector().class(value);
+//   },
+
+//   attr(value) {
+//     return new CssSelector().attr(value);
+//   },
+
+//   pseudoClass(value) {
+//     return new CssSelector().pseudoClass(value);
+//   },
+
+//   pseudoElement(value) {
+//     return new CssSelector().pseudoElement(value);
+//   },
+
+//   combine(selector1, combinator, selector2) {
+//     return new CssSelector().combine(selector1, combinator, selector2);
+//   },
+// };
 
 module.exports = {
   Rectangle,
