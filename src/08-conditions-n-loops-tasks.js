@@ -243,8 +243,8 @@ function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
  * 'rotator' => 'rotator'
  * 'noon' => 'noon'
  */
-function reverseString(/* str */) {
-  throw new Error('Not implemented');
+function reverseString(str) {
+  return str.split('').reverse().join('');
 }
 
 
@@ -260,8 +260,8 @@ function reverseString(/* str */) {
  *   87354 => 45378
  *   34143 => 34143
  */
-function reverseInteger(/* num */) {
-  throw new Error('Not implemented');
+function reverseInteger(num) {
+  return parseInt(num.toString().split('').reverse().join(''), 10);
 }
 
 
@@ -285,10 +285,27 @@ function reverseInteger(/* num */) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
-}
+function isCreditCardNumber(ccn) {
+  let count = 0;
+  const ccnStr = ccn.toString();
+  const divider = ccnStr.length % 2 === 0 ? 0 : 1;
 
+  for (let i = 0; i < ccnStr.length; i += 1) {
+    let num = parseInt(ccnStr[i], 10);
+
+    if (i % 2 === divider) {
+      num *= 2;
+
+      if (num > 9) {
+        num -= 9;
+      }
+    }
+
+    count += num;
+  }
+
+  return count % 10 === 0;
+}
 /**
  * Returns the digital root of integer:
  *   step1 : find sum of all digits
@@ -303,10 +320,15 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  let result = 0;
+  let subNum = num;
+  while (subNum !== 0) {
+    result += subNum % 10;
+    subNum = Math.floor(subNum / 10);
+  }
+  return result < 10 ? result : getDigitalRoot(result);
 }
-
 
 /**
  * Returns true if the specified string has the balanced brackets and false otherwise.
@@ -329,8 +351,28 @@ function getDigitalRoot(/* num */) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str, bracketsConfig = [['[', ']'], ['(', ')'], ['{', '}'], ['<', '>']]) {
+  const openBrackets = [];
+  const closeBrackets = [];
+  const bracketsArray = str.split('');
+
+  for (let i = 0; i <= bracketsConfig.length - 1; i += 1) {
+    openBrackets.push(bracketsConfig[i][0]);
+    closeBrackets.push(bracketsConfig[i][1]);
+  }
+
+  for (let i = 0; i <= bracketsArray.length; i += 1) {
+    for (let j = 0; j < openBrackets.length; j += 1) {
+      if (bracketsArray[i] === openBrackets[j]) {
+        if (bracketsArray[i + 1] === closeBrackets[j]) {
+          bracketsArray.splice(i, 2);
+          i -= 2;
+          break;
+        }
+      }
+    }
+  }
+  return bracketsArray.length === 0;
 }
 
 
@@ -354,8 +396,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return (num).toString(n);
 }
 
 
@@ -371,8 +413,19 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/webalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  let result = '';
+  let isCommon = true;
+  for (let i = 0; i < pathes[0].length; i += 1) {
+    for (let j = 1; j < pathes.length; j += 1) {
+      if (pathes[j][i] !== pathes[0][i]) {
+        isCommon = false;
+      }
+    }
+    if (!isCommon) break;
+    result = `${result}${pathes[0][i]}`;
+  }
+  return result.length ? result.slice(0, result.lastIndexOf('/') + 1) : result;
 }
 
 
@@ -429,10 +482,69 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
-}
+function evaluateTicTacToePosition(position) {
+  const sub = position.map((item) => {
+    if (item.length < 3) {
+      while (item.length !== 3) {
+        item.push(undefined);
+      }
+    }
+    return item;
+  }).flat();
+  let winner;
+  if (sub[0] === sub[1] && sub[1] === sub[2] && sub[0] !== undefined) {
+    if (sub[0] === 'X') {
+      winner = 'X';
+    } else if (sub[0] === '0') {
+      winner = '0';
+    }
+  } else if (sub[3] === sub[4] && sub[4] === sub[5] && sub[3] !== undefined) {
+    if (sub[3] === 'X') {
+      winner = 'X';
+    } else if (sub[3] === '0') {
+      winner = '0';
+    }
+  } else if (sub[6] === sub[7] && sub[7] === sub[8] && sub[6] !== undefined) {
+    if (sub[6] === 'X') {
+      winner = 'X';
+    } else if (sub[6] === '0') {
+      winner = '0';
+    }
+  } else if (sub[0] === sub[3] && sub[0] === sub[6] && sub[0] !== undefined) {
+    if (sub[0] === 'X') {
+      winner = 'X';
+    } else if (sub[0] === '0') {
+      winner = '0';
+    }
+  } else if (sub[1] === sub[4] && sub[1] === sub[7] && sub[1] !== undefined) {
+    if (sub[1] === 'X') {
+      winner = 'X';
+    } else if (sub[1] === '0') {
+      winner = '0';
+    }
+  } else if (sub[2] === sub[5] && sub[2] === sub[8] && sub[2] !== undefined) {
+    if (sub[2] === 'X') {
+      winner = 'X';
+    } else if (sub[2] === '0') {
+      winner = '0';
+    }
+  } else if (sub[0] === sub[4] && sub[0] === sub[8] && sub[0] !== undefined) {
+    if (sub[0] === 'X') {
+      winner = 'X';
+    } else if (sub[0] === '0') {
+      winner = '0';
+    }
+  } else if (sub[2] === sub[4] && sub[2] === sub[6] && sub[2] !== undefined) {
+    if (sub[2] === 'X') {
+      winner = 'X';
+    } else if (sub[2] === '0') {
+      winner = '0';
+    }
+  }
 
+
+  return winner;
+}
 
 module.exports = {
   getFizzBuzz,
